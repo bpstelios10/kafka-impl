@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kafka-client-certs
+  namespace: {{ .Values.namespace }}
+type: Opaque
+data:
+#  client.keystore.jks: {{ .Values.kafkaClientCerts.keystoreJks | indent 4 }}
+#  client.truststore.jks: {{ .Values.kafkaClientCerts.trustoreJks | indent 4 }}
+  client.keystore.jks: {{ .Files.Get "files/client.keystore.jks" | b64enc }}
+  client.truststore.jks: {{ .Files.Get "files/client.truststore.jks" | b64enc }}

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kafka-server-certs
+  namespace: {{ .Values.namespace }}
+type: Opaque
+data:
+  server.keystore.jks: {{ .Values.kafkaServerCerts.keystoreJks | indent 4 }}
+  server.truststore.jks: {{ .Values.kafkaServerCerts.trustoreJks | indent 4 }}

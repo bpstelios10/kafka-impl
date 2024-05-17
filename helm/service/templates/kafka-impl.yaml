@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-impl
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: kafka-impl
+spec:
+  ports:
+  - port: 8080
+    name: client
+  selector:
+    app: kafka-impl
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-impl
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: kafka-impl
+spec:
+  replicas: {{ .Values.kafkaImpl.replicasCount }}
+  selector:
+    matchLabels:
+      app: kafka-impl
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: kafka-impl
+    spec:
+      containers:
+      - name: kafka-impl
+        image: {{ .Values.kafkaImpl.image.repository }}
+        resources:
+          limits:
+            memory: "512Mi"
+          requests:
+            memory: "512Mi"
+            cpu: 0
+#        readinessProbe:
+#          httpGet:
+#            path: /kafka-producer/status
+#            port: 8080
+#          initialDelaySeconds: 15
+#          timeoutSeconds: 1
+#        livenessProbe:
+#          httpGet:
+#            path: /kafka-producer/status
+#            port: 8080
+#          initialDelaySeconds: 30
+#          timeoutSeconds: 1
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - name: kafka-certs-config
+          mountPath: /client-certs
+          readOnly: false
+        env:
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "kafka-cluster.{{ .Values.namespace }}:9092"
+      volumes:
+        - name: kafka-certs-config
+          secret:
+            secretName: kafka-client-certs
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

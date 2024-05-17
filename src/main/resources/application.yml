@@ -1,0 +1,7 @@
+server:
+  servlet:
+    context-path: /kafka
+
+app:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}

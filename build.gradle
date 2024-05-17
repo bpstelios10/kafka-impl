@@ -1,0 +1,95 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPullImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
+
+wrapper {
+    gradleVersion = "8.5"
+}
+
+buildscript {
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+        mavenCentral()
+    }
+    ext {
+        springBootVersion = '2.7.18'
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath 'com.bmuschko:gradle-docker-plugin:6.1.1'
+        classpath 'pl.allegro.tech.build:axion-release-plugin:1.10.3'
+    }
+}
+
+apply plugin: 'java-library'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'com.bmuschko.docker-remote-api'
+
+group = 'org.learnings.all4football'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
+
+project.ext {
+    dockerUsername = '********'
+    dockerPassword = '********'
+    dockerEmail = 'bpstelios10@hotmail.com'
+}
+
+project.version = project.properties.getOrDefault('testVersion', "0.5.0")
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    implementation 'org.apache.kafka:kafka-clients:2.1.0'
+    implementation 'org.apache.kafka:kafka-streams:2.1.0'
+    implementation "org.awaitility:awaitility:4.0.1"
+
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
+
+jar.enabled=false
+bootJar.archiveFileName='kafka-impl.jar'
+
+docker {
+    registryCredentials {
+        url = 'docker.io'
+        username.set System.getenv('DOCKER_USERNAME') ?: project.ext.dockerUsername
+        password.set System.getenv('DOCKER_PASSWORD') ?: project.ext.dockerPassword
+        email.set System.getenv('DOCKER_EMAIL') ?: project.ext.dockerEmail
+    }
+}
+
+tasks.register('buildImage', DockerBuildImage) {
+    inputDir.set file(projectDir)
+    images.add("bpstelios10/$project.name:$project.version")
+}
+
+tasks.register('pushImage', DockerPushImage) {
+    dependsOn buildImage
+    images.set buildImage.images as SetProperty<String>
+}
+
+tasks.register('removeImage', DockerRemoveImage) {
+    dependsOn pushImage
+    force.set true
+    targetImageId buildImage.getImageId() as String
+}
+
+tasks.register('pullImage', DockerPullImage) {
+    dependsOn removeImage
+    image.set "bpstelios10/$project.name:$project.version"
+}
+
+tasks.register('tete') {
+    println projectDir
+}
