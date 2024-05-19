@@ -1,4 +1,4 @@
-package com.all4football.kafka.stream;
+package com.all4football.web;
 
 import com.all4football.kafka.KafkaProperties;
 import lombok.extern.slf4j.Slf4j;
