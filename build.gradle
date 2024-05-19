@@ -15,7 +15,7 @@ buildscript {
         mavenCentral()
     }
     ext {
-        springBootVersion = '2.7.18'
+        springBootVersion = '3.2.5'
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
@@ -47,12 +47,12 @@ repositories {
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
-    implementation 'org.apache.kafka:kafka-clients:2.1.0'
-    implementation 'org.apache.kafka:kafka-streams:2.1.0'
-    implementation "org.awaitility:awaitility:4.0.1"
+    implementation 'org.apache.kafka:kafka-clients:3.7.0'
+    implementation 'org.apache.kafka:kafka-streams:3.7.0'
+    implementation "org.awaitility:awaitility:4.2.1"
 
-    compileOnly 'org.projectlombok:lombok:1.18.30'
-    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
 
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 
