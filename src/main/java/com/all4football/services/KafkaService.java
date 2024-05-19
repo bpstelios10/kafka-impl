@@ -2,6 +2,7 @@ package com.all4football.services;
 
 import com.all4football.kafka.KafkaConsumerClient;
 import com.all4football.kafka.KafkaProducerClient;
+import com.all4football.kafka.KafkaStreamClient;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -16,10 +17,12 @@ public class KafkaService {
 
     private final KafkaConsumerClient kafkaConsumerClient;
     private final KafkaProducerClient kafkaProducerClient;
+    private final KafkaStreamClient kafkaStreamClient;
 
-    public KafkaService(KafkaConsumerClient kafkaConsumerClient, KafkaProducerClient kafkaProducerClient) {
+    public KafkaService(KafkaConsumerClient kafkaConsumerClient, KafkaProducerClient kafkaProducerClient, KafkaStreamClient kafkaStreamClient) {
         this.kafkaConsumerClient = kafkaConsumerClient;
         this.kafkaProducerClient = kafkaProducerClient;
+        this.kafkaStreamClient = kafkaStreamClient;
     }
 
     public List<String> consumeMessages() {
@@ -32,5 +35,13 @@ public class KafkaService {
 
     public void produceMessages() {
         kafkaProducerClient.produceMessages(StringSerializer.class.getName(), CUSTOM_TOPIC);
+    }
+
+    public String processMessages() {
+        String outputTopic = "outputTopic";
+
+        kafkaStreamClient.processMessages(CUSTOM_TOPIC, outputTopic);
+
+        return outputTopic;
     }
 }
