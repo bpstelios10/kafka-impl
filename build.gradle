@@ -19,8 +19,8 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath 'com.bmuschko:gradle-docker-plugin:6.1.1'
-        classpath 'pl.allegro.tech.build:axion-release-plugin:1.10.3'
+        classpath 'com.bmuschko:gradle-docker-plugin:6.7.0'
+//        classpath 'pl.allegro.tech.build:axion-release-plugin:1.10.3'
     }
 }
 
@@ -34,12 +34,12 @@ sourceCompatibility = JavaVersion.VERSION_21
 targetCompatibility = JavaVersion.VERSION_21
 
 project.ext {
-    dockerUsername = '********'
-    dockerPassword = '********'
+    dockerUsername = '*******'
+    dockerPassword = '*******'
     dockerEmail = 'bpstelios10@hotmail.com'
 }
 
-project.version = project.properties.getOrDefault('testVersion', "0.5.0")
+project.version = project.properties.getOrDefault('testVersion', "0.6.0")
 
 repositories {
     mavenCentral()
@@ -90,8 +90,4 @@ tasks.register('removeImage', DockerRemoveImage) {
 tasks.register('pullImage', DockerPullImage) {
     dependsOn removeImage
     image.set "bpstelios10/$project.name:$project.version"
-}
-
-tasks.register('tete') {
-    println projectDir
 }

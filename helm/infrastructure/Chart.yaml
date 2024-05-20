@@ -1,0 +1,7 @@
+apiVersion: v2
+name: infrastructure
+description: This Chart handles the creation of k8s resources, like ns, quotas etc
+
+type: application
+version: 0.2.0
+appVersion: 0.1.0

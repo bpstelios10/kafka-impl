@@ -43,22 +43,22 @@ spec:
         image: {{ .Values.kafkaImpl.image.repository }}
         resources:
           limits:
-            memory: "512Mi"
+            memory: "1G"
           requests:
-            memory: "512Mi"
+            memory: "1G"
             cpu: 0
-#        readinessProbe:
-#          httpGet:
-#            path: /kafka-producer/status
-#            port: 8080
-#          initialDelaySeconds: 15
-#          timeoutSeconds: 1
-#        livenessProbe:
-#          httpGet:
-#            path: /kafka-producer/status
-#            port: 8080
-#          initialDelaySeconds: 30
-#          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /kafka/kafka-producer/status
+            port: 8080
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+        livenessProbe:
+          httpGet:
+            path: /kafka/kafka-producer/status
+            port: 8080
+          initialDelaySeconds: 30
+          timeoutSeconds: 1
         ports:
         - containerPort: 8080
           name: http
@@ -70,6 +70,8 @@ spec:
         env:
         - name: KAFKA_BOOTSTRAP_SERVERS
           value: "kafka-cluster.{{ .Values.namespace }}:9092"
+        - name: DEPLOYMENT_ENVIRONMENT
+          value: dev
       volumes:
         - name: kafka-certs-config
           secret:

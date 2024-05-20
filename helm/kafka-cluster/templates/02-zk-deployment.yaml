@@ -43,17 +43,7 @@ spec:
             memory: "300Mi"
             cpu: 0
         # readinessProbe:
-        #   httpGet:
-        #     path: /private/ready
-        #     port: 8080
-        #   initialDelaySeconds: 15
-        #   timeoutSeconds: 1
         # livenessProbe:
-        #   httpGet:
-        #     path: /private/status
-        #     port: 8080
-        #   initialDelaySeconds: 30
-        #   timeoutSeconds: 1
         ports:
         - containerPort: 2181
           name: http

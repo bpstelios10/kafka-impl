@@ -33,13 +33,14 @@ in Dockerfile
 docker-compose up --build
 ```
 
-### K8s with Helm (wip)
+### K8s with Helm
 
 For K8s environments, we use minikube setup to test. Also,
 a [custom helm-plugin](https://github.com/bpstelios10/helm-plugin) that provides templates needed.
 In [build.gradle](build.gradle) you can find tasks to publish the images to a docker repo, so that are available for
 k8s to download. You need to configure your own repo, so that you have access. Also, tasks to interact with k8s using
 Helm.
+You can find more info regarding using minikube with helm and how to deploy the current services in [the guide provided](K8S_WITH_HELM_GUIDE.md).
 
 ## API
 
