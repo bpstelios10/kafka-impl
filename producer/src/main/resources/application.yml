@@ -1,0 +1,8 @@
+server:
+  servlet:
+    context-path: /kafka/producer
+  port : 8081
+
+app:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}

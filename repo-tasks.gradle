@@ -1,0 +1,45 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPullImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
+
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:9.0.1'
+    }
+}
+
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+
+docker {
+    registryCredentials {
+        username.set System.getenv('DOCKER_USERNAME') ?: project.parent.ext.dockerUsername
+        password.set System.getenv('DOCKER_PASSWORD') ?: project.parent.ext.dockerPassword
+        email.set System.getenv('DOCKER_EMAIL') ?: project.parent.ext.dockerEmail
+    }
+}
+
+tasks.register('buildImage', DockerBuildImage) {
+    println "image name: $project.name"
+    inputDir.set file(projectDir)
+    images.add("bpstelios10/$project.name:$project.version")
+}
+
+tasks.register('pushImage', DockerPushImage) {
+    dependsOn buildImage
+    images.set buildImage.images as SetProperty<String>
+}
+
+tasks.register('removeImage', DockerRemoveImage) {
+    dependsOn pushImage
+    force.set true
+    targetImageId buildImage.getImageId() as String
+}
+
+tasks.register('pullImage', DockerPullImage) {
+    dependsOn removeImage
+    image.set "bpstelios10/$project.name:$project.version"
+}

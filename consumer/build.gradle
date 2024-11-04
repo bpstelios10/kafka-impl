@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:9.4.0'
+    }
+}
+
+group = 'org.learnings.all4football.consumer'
+project.version = project.properties.getOrDefault('testVersion', "0.6.0")
+
+apply from: "../repo-tasks.gradle"
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    implementation 'org.apache.kafka:kafka-clients:3.7.0'
+    implementation 'org.apache.kafka:kafka-streams:3.7.0'
+    implementation "org.awaitility:awaitility:4.2.1"
+
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+
+    test.useJUnitPlatform()
+}
+
+jar.enabled=false
+bootJar.archiveFileName='kafka-impl-consumer.jar'

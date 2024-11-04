@@ -86,15 +86,15 @@ services:
       - ./kafka-volumes/kafka2/data:/var/lib/kafka/data
       - ./kafka/server-certs:/server-certs/
 
-  kafka-producer:
-    build: .
-    environment:
-      - DEPLOYMENT_ENVIRONMENT=docker-compose
-      - KAFKA_BOOTSTRAP_SERVERS=kafka1:9093,kafka2:9093
-    ports:
-      - "8080:8080"
-    depends_on:
-      - kafka1
-      - kafka2
-    volumes:
-      - ./kafka/client-certs:/client-certs/
+#  kafka-producer:
+#    build: .
+#    environment:
+#      - DEPLOYMENT_ENVIRONMENT=docker-compose
+#      - KAFKA_BOOTSTRAP_SERVERS=kafka1:9093,kafka2:9093
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - kafka1
+#      - kafka2
+#    volumes:
+#      - ./kafka/client-certs:/client-certs/

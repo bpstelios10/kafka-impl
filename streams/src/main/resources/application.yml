@@ -1,0 +1,8 @@
+server:
+  servlet:
+    context-path: /kafka/streams
+  port : 8083
+
+app:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
